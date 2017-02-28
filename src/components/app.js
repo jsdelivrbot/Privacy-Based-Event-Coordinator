@@ -7,7 +7,7 @@ export default class App extends Component {
     return(
       <div className="container" id="app-container">
         <EventPlanner
-          showSubmitButton={true}
+          isNewEvent={true}
         />
       </div>
     );

@@ -9,39 +9,29 @@ import EventTimeTile from '../components/event-time-tile';
 import InviteeTile from '../components/invitee-tile';
 import ResponseTile from '../components/response-tile';
 
+import EventInformationTile from '../components/event-information-tile';
+
 class EventPlanner extends Component {
   constructor(props) {
     super(props);
-    this.renderSubmitButton = this.renderSubmitButton.bind(this);
+    this.state = {newEvent: this.props.isNewEvent};
     this.onClickSubmitButton = this.onClickSubmitButton.bind(this);
+    this.renderNewEvent = this.renderNewEvent.bind(this);
+    this.renderExistingEvent = this.renderExistingEvent.bind(this);
+    this.renderApp = this.renderApp.bind(this);
   }
 
   onClickSubmitButton(event) {
-    var eventInformation = this.refs.eventTile.state.eventStorage;
+    var proposedTimes = this.refs.eventTile.state.eventStorage;
     var inviteeInformation = this.refs.inviteeTile.state.inviteeStorage;
-    this.props.sendEventData({eventInformation, inviteeInformation});
+    var eventDescription = this.refs.eventInformation.state.eventDescription;
+    var eventLocation = this.refs.eventInformation.state.eventLocation;
+    this.props.sendEventData({proposedTimes, inviteeInformation, eventDescription, eventLocation});
+    this.setState({newEvent: false});
   }
 
-  renderSubmitButton() {
-    if (this.props.showSubmitButton == true) {
-      return (
-        <div className="row">
-          <div className="col-md-0 col-sm-4"></div>
-          <div className="col-md-12 col-sm-4">
-              <RaisedButton
-                label="Submit Event"
-                primary={true}
-                onClick={this.onClickSubmitButton}
-              />
-          </div>
-          <div className="col-md-0 col-sm-4"></div>
-        </div>
-      );
-    }
-  }
-
-  render() {
-    return(
+  renderNewEvent() {
+    return (
       <div className="container" id="app-container">
         <div className="row">
           <div className="col-md-12 app-element">
@@ -57,14 +47,57 @@ class EventPlanner extends Component {
             />
           </div>
           <div className="col-md-6 app-element">
-            <ResponseTile
-              ref = 'responseTile'
+            <EventInformationTile
+              ref = 'eventInformation'
             />
           </div>
         </div>
-        {this.renderSubmitButton()}
+        <div className="row">
+          <div className="col-md-0 col-sm-4"></div>
+          <div className="col-md-12 col-sm-4">
+              <RaisedButton
+                label="Submit Event"
+                primary={true}
+                onClick={this.onClickSubmitButton}
+              />
+          </div>
+          <div className="col-md-0 col-sm-4"></div>
+        </div>
       </div>
     );
+  }
+
+  renderExistingEvent() {
+    return (
+      <div className="container" id="app-container">
+        <div className="row">
+          <div className="col-sm-12 app-element">
+            <ResponseTile />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-md-6 app-element">
+            <EventInformationTile />
+          </div>
+          <div className="col-md-6 app-element">
+            <InviteeTile />
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  renderApp() {
+    var renderWhich = this.state.newEvent;
+    if (renderWhich == true) {
+      return (this.renderNewEvent());
+    } else {
+      return (this.renderExistingEvent());
+    }
+  }
+
+  render() {
+    return (this.renderApp());
   }
 }
 
