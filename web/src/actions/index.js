@@ -9,8 +9,7 @@ export function sendEventData(data) {
   // const getRequest = axios.get(requestURL);
   // console.log("Request: ", getRequest);
   // POST made here
-  console.log(data);
-  console.log('Send event data called. Data log above.');
+  console.log(JSON.stringify(data));
   return {
     // type: FETCH_WEATHER,
     // payload: getRequest
