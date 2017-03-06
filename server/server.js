@@ -5,8 +5,8 @@ var bodyParser  = require('body-parser');
 var Event       = require('./app/models/event');
 var app = express()
 
-var dbUserName = '';
-var dbPassword = '';
+var dbUserName = 'ksaghari';
+var dbPassword = 'testEnvironment767';
 var dbURI      = 'mongodb://' + dbUserName + ':' + dbPassword + '@ds047622.mlab.com:47622/cas_767_environment';
 
 app.use(bodyParser.urlencoded({extended: true}));
@@ -37,7 +37,54 @@ router.route('/event')
       }
       res.json({message: 'Event ' + newEvent.name + ' created!'});
     });
+  })
+
+  .get(function(req, res) {
+    Event.find(function(err, events) {
+      if (err) {
+        res.send(err);
+      }
+      res.json(events);
+    });
   });
+
+router.route('/event/:event_id')
+  .get(function(req, res) {
+    Event.findById(req.params.event_id, function(err, event) {
+      if (err) {
+        res.send(err);
+      }
+      res.json(event);
+    })
+  })
+
+  .put(function(req, res) {
+    Event.findById(req.params.event_id, function(err, event) {
+      if (err) {
+        res.send(err);
+      }
+      event.name = req.body.name;
+      event.save(function(err) {
+        if (err) {
+          res.send(err);
+        }
+        res.json({message: 'Updated the event!'});
+      });
+    });
+  })
+
+  .delete(function(req, res) {
+    Event.remove({
+      _id: req.params.event_id
+    }, function(err, event) {
+      if (err) {
+        res.send(err);
+      }
+      res.json({message: 'The event was deleted!'});
+    });
+  });
+
+
 
 app.use('/api', router);
 
