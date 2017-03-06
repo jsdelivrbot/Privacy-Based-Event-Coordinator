@@ -5,9 +5,9 @@ var bodyParser  = require('body-parser');
 var Event       = require('./app/models/event');
 var app = express()
 
-var dbUserName = 'ksaghari';
-var dbPassword = 'testEnvironment767';
-var dbURI      = 'mongodb://' + dbUserName + ':' + dbPassword + '@ds047622.mlab.com:47622/cas_767_environment';
+var dbUserName = '';
+var dbPassword = '';
+var dbURI      = '';
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
