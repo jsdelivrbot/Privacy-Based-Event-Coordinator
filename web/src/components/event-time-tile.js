@@ -4,16 +4,18 @@ import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import ContentRemove from 'material-ui/svg-icons/content/remove';
+import Snackbar from 'material-ui/Snackbar';
 
 import EventPickerRow from './event-picker-row';
 
 export default class EventTimeTile extends Component {
   constructor(props) {
     super(props);
-    this.state = {eventStorage : [], eventIndexTracker : {}, numEventTimes: 1};
+    this.state = {snackbarIsOpen: false, eventStorage : [], eventIndexTracker : {}, numEventTimes: 1};
     this.onAddEventRow = this.onAddEventRow.bind(this);
     this.onRemoveEventRow = this.onRemoveEventRow.bind(this);
     this.addDateAndTime = this.addDateAndTime.bind(this);
+    this.handleRequestClose = this.handleRequestClose.bind(this);
   }
 
   onAddEventRow(event) {
@@ -29,6 +31,7 @@ export default class EventTimeTile extends Component {
   }
 
   addDateAndTime(component, event) {
+    this.setState({snackbarIsOpen: true});
     var date = component.state.date
     var time = component.state.time
     if ((date != undefined) && (time != undefined)) {
@@ -45,6 +48,10 @@ export default class EventTimeTile extends Component {
         }
       }
     }
+  }
+
+  handleRequestClose() {
+    this.setState({snackbarIsOpen: false});
   }
 
   render() {
@@ -93,6 +100,12 @@ export default class EventTimeTile extends Component {
                 </div>
               </div>
             </form>
+            <Snackbar
+              open={this.state.snackbarIsOpen}
+              message="Event information saved!"
+              autoHideDuration={2250}
+              onRequestClose={this.handleRequestClose}
+            />
           </CardText>
         </Card>
       </div>
