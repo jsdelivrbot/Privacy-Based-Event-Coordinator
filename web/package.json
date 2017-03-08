@@ -37,6 +37,7 @@
     "react-sparklines": "^1.6.0",
     "react-tap-event-plugin": "^2.0.1",
     "redux": "^3.0.4",
-    "redux-promise": "^0.5.3"
+    "redux-promise": "^0.5.3",
+    "simple-aes-json": "0.0.3"
   }
 }
