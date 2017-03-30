@@ -7,9 +7,10 @@ var saj         = require('simple-aes-json');
 
 var app = express()
 
-var dbUserName = '';
-var dbPassword = '';
-var dbURI      = '';
+var dbUserName = 'ksaghari';
+var dbPassword = 'cas767environment';
+var dbURI      = 'mongodb://' + dbUserName + ':' + dbPassword + '@ds047622.mlab.com:47622/cas_767_environment';
+var eventID    = '58c19ff1ce67b210a34c53c9';
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
@@ -31,9 +32,11 @@ router.get('/', function(req, res) {
 
 router.route('/event')
   .post(function(req, res) {
+    console.log('\nRequest: \n' + req  + '\n');
     var encryptedData = req.body.eventData;
     var rawData = '';
     saj.decrypt(encryptedData, 'passphrase', function(result) {
+      console.log("\n" + "Encrypted request body: "  + encryptedData + '\n');
       rawData = result;
     });
     var jsonData = JSON.parse(rawData);
@@ -62,7 +65,7 @@ router.route('/event')
 
 router.route('/event/:event_id')
   .get(function(req, res) {
-    Event.findById(req.params.event_id, function(err, event) {
+    Event.findById(eventID, function(err, event) {
       if (err) {
         res.send(err);
       }
@@ -75,7 +78,14 @@ router.route('/event/:event_id')
       if (err) {
         res.send(err);
       }
-      event.name = req.body.name;
+      console.log('here');
+      console.log(req.body.eventData);
+      console.log('end');
+      var jsonData = JSON.parse(req.body.eventData);
+      event.proposedTimes = jsonData.proposedTimes;
+      event.invitees = jsonData.inviteeInformation;
+      event.eventDescription = jsonData.eventDescription;
+      event.eventLocation = jsonData.eventLocation;
       event.save(function(err) {
         if (err) {
           res.send(err);
